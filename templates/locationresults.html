@@ -1,0 +1,23 @@
+<html>
+    <title>Welcome to MMS</title>
+    <body>
+        <h1>Welcome to Marilyn Monroe Spas</h1>
+        <div></div>
+        <a href="/login/">Login</a>
+        <a href="/register">Register</a>
+        <a href="/find/">Find Locations</a>
+        <div></div>
+        <table>
+            {% if Results %}
+                {% for result in Results %}
+                    <tr>
+                        <td>{{ result.BusinessName }}</td>
+                        <td>{{ result.Phone }}</td>
+                        <td>{{ result.ID }}</td>
+                    </tr>
+
+                {% endfor %}
+            {% endif %}
+        </table>
+    </body>
+</html>
