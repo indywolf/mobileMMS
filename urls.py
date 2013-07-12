@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 from login.views import login
+from login.views import logout
 from register.views import register
 from home.views import home
 from find.views import find
@@ -10,6 +11,7 @@ from find.views import find
 
 urlpatterns = patterns('',
     url(r'^login/?', login),
+    url(r'^logout/?', logout),
     url(r'^register/?', register),
     url(r'^find/?', find),
 

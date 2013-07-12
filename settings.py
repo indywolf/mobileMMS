@@ -7,6 +7,7 @@ TEMPLATE_DEBUG = DEBUG
 APISECRET = 'tWULPwYBXqqv'
 APIKEY = 'YIS6dBQrC7NT'
 APIPATH = 'http://stable-app.secure-booker.com/webservice4/json/CustomerService.svc/'
+APILOCATION = 14632
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),

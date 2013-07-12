@@ -9,7 +9,13 @@ from mobileMMS.CustomerAPI.customerAPI import CustomerAPI
 
 def find(request):
 
-    accessToken = getSessionToken()
+    if "user_session" in request.COOKIES:
+        accessToken = request.COOKIES["user_session"]
+        print "cookie session"
+    else:
+        accessToken = getSessionToken()
+        print "non cookie session"
+
     print 'access token: ' + accessToken
 
     apiFindLocationsParams = { "BrandID": None,
