@@ -3,19 +3,14 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from mobileMMS.utilities.common import getSessionToken
 from mobileMMS.CustomerAPI.customerAPI import CustomerAPI
+from mobileMMS.utilities.common import getEncryptedValue
 
 
 
 
 def find(request):
 
-    if "user_session" in request.COOKIES:
-        accessToken = request.COOKIES["user_session"]
-        print "cookie session"
-    else:
-        accessToken = getSessionToken()
-        print "non cookie session"
-
+    accessToken = getSessionToken(request)
     print 'access token: ' + accessToken
 
     apiFindLocationsParams = { "BrandID": None,
@@ -36,4 +31,6 @@ def find(request):
     cs = CustomerAPI()
     locResponse = cs.request("POST","locations", apiFindLocationsParams)
 
-    return render(request, 'locationresults.html', locResponse)
+    response = render(request, 'locationresults.html', locResponse)
+    response.set_cookie("user_session", getEncryptedValue(accessToken))
+    return response
