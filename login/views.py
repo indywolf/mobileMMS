@@ -1,5 +1,6 @@
 import json
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from mobileMMS.login.forms import LoginForm
 from django.shortcuts import render
 from mobileMMS.CustomerAPI.customerAPI import CustomerAPI
@@ -23,20 +24,28 @@ def login(request):
                 "grant_type": ""
             }
 
-        cs = CustomerAPI()
-        loginResponse = cs.request("POST","customer/login", apiLoginParams)
-        print loginResponse
-        print loginResponse["access_token"]
-        print loginResponse["Customer"]["CustomerID"]
+            cs = CustomerAPI()
+            loginResponse = cs.request("POST","customer/login", apiLoginParams)
 
-
-        response = render(request, 'loginresults.html', loginResponse)
-        response.set_cookie("user_session", loginResponse["access_token"])
-        response.set_cookie("user", loginResponse["Customer"]["CustomerID"])
-        return response
+            response = render(request, 'loginresults.html', loginResponse)
+            response.set_cookie("user_session", loginResponse["access_token"])
+            response.set_cookie("user", loginResponse["Customer"]["CustomerID"])
+            return response
     else:
         form = LoginForm()
         return render(request, 'login.html', {'form': form})
 
 def logout(request):
-    return render(request, 'login.html', {})
+    if "user_session" in request.COOKIES:
+        apiLogoutParams = {
+            "access_token": request.COOKIES["user_session"]
+        }
+
+        cs = CustomerAPI()
+        logoutResponse = cs.request("POST", "logout", apiLogoutParams)
+
+
+    response = redirect(settings.BASEURL)
+    response.delete_cookie("user_session")
+
+    return response
