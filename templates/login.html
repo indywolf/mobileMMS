@@ -9,6 +9,12 @@
             </p>
         {% endif %}
 
+        {% if error %}
+            <p style="color: red;">
+                {{ error }}
+            </p>
+        {% endif %}
+
         <form action="" method="post">
             <table>
                 {{ form.as_table }}

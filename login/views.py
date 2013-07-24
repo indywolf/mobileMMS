@@ -1,5 +1,3 @@
-import json
-from django.http import HttpResponse
 from django.shortcuts import redirect
 from mobileMMS.login.forms import LoginForm
 from django.shortcuts import render
@@ -7,6 +5,7 @@ from mobileMMS.CustomerAPI.customerAPI import CustomerAPI
 from mobileMMS.utilities.common import getEncryptedValue
 from mobileMMS.utilities.common import getDecryptedValue
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 
 def login(request):
@@ -30,9 +29,14 @@ def login(request):
             loginResponse = cs.request("POST","customer/login", apiLoginParams)
 
             response = render(request, 'loginresults.html', loginResponse)
-            response.set_cookie("user_session", getEncryptedValue(loginResponse["access_token"]))
-            response.set_cookie("user", loginResponse["Customer"]["CustomerID"])
-            return response
+            if loginResponse["error"] == "invalid_client":
+                form = LoginForm()
+                return render(request, 'login.html', {'form': form, 'error' : 'Please enter a valid username/password'})
+            else:
+                print 'valid response'
+                response.set_cookie("user_session", getEncryptedValue(loginResponse["access_token"]))
+                response.set_cookie("user", loginResponse["Customer"]["CustomerID"])
+                return response
     else:
         form = LoginForm()
         return render(request, 'login.html', {'form': form})
