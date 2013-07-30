@@ -1,6 +1,6 @@
 from django import forms
 
-class UpdateAccountForm(forms.Form):
+class EditAccountForm(forms.Form):
     Email = forms.EmailField()
     FirstName = forms.CharField()
     LastName = forms.CharField()
@@ -14,4 +14,10 @@ class UpdateAccountForm(forms.Form):
     City = forms.CharField()
     State = forms.CharField()
     ZipCode = forms.CharField()
+
+class UpdatePasswordForm(forms.Form):
+    Email = forms.EmailField()
+    NewPassword = forms.CharField(widget=forms.PasswordInput)
+    OldPassword = forms.CharField(widget=forms.PasswordInput)
+
 

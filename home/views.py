@@ -1,10 +1,7 @@
-from django.http import HttpResponse
 from django.shortcuts import render
+from mobileMMS.utilities.common import getSessionDictionary
 
 def home(request):
-    if "user_session" in request.COOKIES and "user" in request.COOKIES:
-        headerstatus = { "message": "logged in"}
-    else:
-        headerstatus = { "message": "anonymous"}
+    sessioninfo = getSessionDictionary(request)
 
-    return render(request, 'home.html', headerstatus)
+    return render(request, 'home.html', sessioninfo)

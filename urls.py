@@ -5,6 +5,9 @@ from login.views import forgot
 from register.views import register
 from home.views import home
 from find.views import find
+from myaccount.views import myAccount
+from myaccount.views import editAccount
+from myaccount.views import updatePassword
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -16,6 +19,9 @@ urlpatterns = patterns('',
     url(r'^forgot/?', forgot),
     url(r'^register/?', register),
     url(r'^find/?', find),
+    url(r'^myaccount/edit/?',editAccount),
+    url(r'^myaccount/reset?', updatePassword),
+    url(r'^myaccount/?', myAccount),
 
     # Examples:
     url(r'^$', home)

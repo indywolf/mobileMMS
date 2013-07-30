@@ -20,4 +20,9 @@ class CustomerAPI:
             headers = {'Content-Type': 'application/json'}
             response = requests.post(url, data=json.dumps(params), headers=headers)
 
+        if requestType.upper() == "PUT":
+            url = settings.APIPATH + method
+            headers = {'Content-Type': 'application/json'}
+            response = requests.put(url, data=json.dumps(params), headers=headers)
+
         return response.json()

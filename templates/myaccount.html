@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Account</title>
+</head>
+<body>
+    <h1>Welcome to Marilyn Monroe Spas</h1>
+        {%  if firstname %}
+            <div><h3>Welcome {{ firstname }}</h3></div>
+        {%  endif %}
+        <div></div>
+        <a href="/myaccount/edit/">Edit Account</a>
+        <a href="/myaccount/reset/">Reset Password</a>
+        <a href="/find/">Find Locations</a>
+        <div></div>
+
+</body>
+</html>

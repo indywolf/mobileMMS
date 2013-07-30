@@ -45,3 +45,16 @@ def getDecryptedValue(target):
     decryptedTarget = DecodeAES(cipher, target)
     print 'Decrypted string:', decryptedTarget
     return decryptedTarget
+
+def getSessionDictionary(request):
+    session = {}
+    if "user" in request.COOKIES:
+        session['user'] = request.COOKIES['user']
+    if "user_session" in request.COOKIES:
+        session['user_session'] = request.COOKIES['user_session']
+    if "name" in request.COOKIES:
+        session['name'] = request.COOKIES['name']
+    if "location" in request.COOKIES:
+        session['location'] = request.COOKIES['location']
+
+    return session
