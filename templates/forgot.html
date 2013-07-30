@@ -1,7 +1,7 @@
 <html>
-    <title>Login to MMS</title>
+    <title>Forgot Password</title>
     <body>
-        <h1>Login</h1>
+        <h1>Forgot Password</h1>
 
         {% if form.errors %}
             <p style="color: red;">
@@ -22,7 +22,5 @@
             {% csrf_token %}
             <input type="submit" value="Submit">
         </form>
-        <div></div>
-        <a href="/forgot/">Forgot Password</a>
     </body>
 </html>

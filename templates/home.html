@@ -3,9 +3,15 @@
     <body>
         <h1>Welcome to Marilyn Monroe Spas</h1>
         <div></div>
-        <a href="login/">Login</a>
-        <a href="register">Register</a>
-        <a href="find/">Find Locations</a>
+        {% if message == "anonymous" %}
+            <a href="login/">Login</a>
+            <a href="register">Register</a>
+            <a href="find/">Find Locations</a>
+        {% else %}
+            <a href="logout/">Logout</a>
+            <a href="myaccount">My Account</a>
+            <a href="find/">Find Locations</a>
+        {% endif %}
         <div></div>
     </body>
 </html>

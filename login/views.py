@@ -1,11 +1,13 @@
 from django.shortcuts import redirect
 from mobileMMS.login.forms import LoginForm
+from mobileMMS.login.forms import ForgotForm
 from django.shortcuts import render
 from mobileMMS.CustomerAPI.customerAPI import CustomerAPI
 from mobileMMS.utilities.common import getEncryptedValue
 from mobileMMS.utilities.common import getDecryptedValue
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from mobileMMS.utilities.common import getSessionToken
+
 
 
 def login(request):
@@ -28,13 +30,13 @@ def login(request):
             cs = CustomerAPI()
             loginResponse = cs.request("POST","customer/login", apiLoginParams)
 
-            response = render(request, 'loginresults.html', loginResponse)
             if loginResponse["error"] == "invalid_client":
                 form = LoginForm()
                 return render(request, 'login.html', {'form': form, 'error' : 'Please enter a valid username/password'})
             else:
+                response = render(request, 'loginresults.html', loginResponse)
                 print 'valid response'
-                response.set_cookie("user_session", getEncryptedValue(loginResponse["access_token"]))
+                response.set_cookie("user_session", getEncryptedValue(loginResponse["access_token"]), max_age=1209600)
                 response.set_cookie("user", loginResponse["Customer"]["CustomerID"])
                 return response
     else:
@@ -54,3 +56,31 @@ def logout(request):
     response.delete_cookie("user_session")
 
     return response
+
+def forgot(request):
+    if request.method == 'POST':
+        form = ForgotForm(request.POST)
+        if form.is_valid():
+
+            cd = form.cleaned_data
+            apiForgotParams = {
+                "Email": cd["Email"],
+                "Firstname": cd["FirstName"],
+                "LocationID": settings.APILOCATION,
+                "BrandID": None,
+                "access_token": getSessionToken(request)
+            }
+
+            cs = CustomerAPI()
+            forgotResponse = cs.request("POST","forgot_password", apiForgotParams)
+            print forgotResponse
+            if forgotResponse["ErrorCode"] != 0:
+                form = ForgotForm()
+                return render(request, 'forgot.html', {'form': form, 'error' : forgotResponse["ErrorMessage"]})
+            else:
+                print 'valid response'
+                response = render(request, 'forgotresults.html', apiForgotParams)
+                return response
+    else:
+        form = ForgotForm()
+        return render(request, 'forgot.html', {'form': form})

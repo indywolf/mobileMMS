@@ -1,22 +1,20 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
-from mobileMMS.register.forms import RegisterForm
-from django.http import HttpResponseRedirect
+from mobileMMS.myaccount.forms import UpdateAccountForm
 from mobileMMS.CustomerAPI.customerAPI import CustomerAPI
 from mobileMMS.utilities.common import getSessionToken
 from django.conf import settings
 
-def register(request):
+def updateAccount(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = UpdateAccountForm(request.POST)
         if form.is_valid():
 
             accessToken = getSessionToken(request)
             print 'access token: ' + accessToken
 
             cd = form.cleaned_data
-            registerData = {
-                "Password": cd['Password'],
+            updateAccountData = {
                 "Address": {
                     "City": cd['City'],
                     "Country": {
@@ -43,7 +41,7 @@ def register(request):
             }
 
             cs = CustomerAPI()
-            customerResponse = cs.request("POST","customer/account", registerData)
+            customerResponse = cs.request("POST","customer/account", updateAccountData)
             print customerResponse
             if customerResponse["IsSuccess"] is True:
                 response = redirect(settings.BASEURL + "/login")
@@ -54,6 +52,10 @@ def register(request):
                 return render(request, 'register_form.html', {'form': form, "error": customerResponse["ErrorMessage"]})
 
     else:
-        form = RegisterForm()
-    return render(request, 'register_form.html', {'form': form})
+        if "user_session" in request.COOKIES and "user" in request.COOKIES:
+            form = UpdateAccountForm()
+            return render(request, 'myaccount_form.html', {'form': form})
+        else:
+            response = redirect(settings.BASEURL + '/login/')
+            return response
 
